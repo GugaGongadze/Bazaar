@@ -1,16 +1,23 @@
-import errorHandler from "errorhandler";
+import express, { Response, Request, NextFunction } from 'express'
+import { connectDb } from './models'
+import { createApp } from './app'
+import injectMiddleware from './middleware'
+import injectRoutes from './routes'
+import { handleError } from './error'
 
-import app from "./app";
+const app = createApp()
+const server = express()
 
-app.use(errorHandler())
+injectMiddleware(app, server)
+injectRoutes(app, server)
 
-const server = app.listen(app.get("port"), () => {
-    console.log(
-        "  App is running at http://localhost:%d in %s mode",
-        app.get("port"),
-        app.get("env")
-    );
-    console.log("  Press CTRL-C to stop\n");
-});
+// Error Layer
+server.use((err: any, _: Request, res: Response, next: NextFunction) => {
+  handleError(err, res)
+})
 
-export default server;
+connectDb().then(async () => {
+  server.listen(process.env.PORT, () =>
+    console.log(`Server listening on port ${process.env.PORT}!`),
+  )
+})
