@@ -1,30 +1,38 @@
 <script>
-	export let name;
+  import router from 'page'
+  import Home from './routes/Home.svelte'
+  import Login from './routes/Login.svelte'
+  import Register from './routes/Register.svelte'
+
+  let page
+  let params
+  let user = null
+
+  router('/login', () => page = Login)
+  router('/register', () => page = Register)
+  router('/', () => {
+    if (!user) {
+      router.redirect('/login')
+    }
+
+    page = Home
+  })
+  router('/*', () => router.redirect('/'))
+
+  router.start()
 </script>
 
+
 <main>
-	<h1>Hello {name}!</h1>
-	<p>Visit the <a href="https://svelte.dev/tutorial">Svelte tutorial</a> to learn how to build Svelte apps.</p>
+  <svelte:component this={page} params={params} />
 </main>
 
-<style>
-	main {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	}
+<style global>
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
 
-	h1 {
-		color: #ff3e00;
-		text-transform: uppercase;
-		font-size: 4em;
-		font-weight: 100;
-	}
-
-	@media (min-width: 640px) {
-		main {
-			max-width: none;
-		}
-	}
+  main {
+    height: 100%;
+  }
 </style>
