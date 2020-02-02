@@ -5,6 +5,8 @@ import { Application } from './app'
 import { ErrorHandler } from './error'
 import { ErrorCode, UserPermission, RequestWithUser } from './types'
 
+const publicEndpoints = ['/ping', '/login', '/register', '/confirm']
+
 export default function injectMiddleware(app: Application, server: Express) {
   server.use(cors())
   server.use(bodyParser.json())
@@ -12,8 +14,6 @@ export default function injectMiddleware(app: Application, server: Express) {
 
   // Authorization layer
   server.use(async (req: RequestWithUser, res, next) => {
-    const publicEndpoints = ['/ping', '/login', '/register', '/confirm']
-
     if (
       !publicEndpoints.includes(req.url) &&
       !req.url.includes('/confirm/') &&

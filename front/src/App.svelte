@@ -4,18 +4,35 @@
   import Login from './routes/Login.svelte'
   import Register from './routes/Register.svelte'
 
-  let page
-  let params
-  let user = null
+  let component
+  let props
 
-  router('/login', () => page = Login)
-  router('/register', () => page = Register)
+  router('/login', () => {
+    const token = localStorage.getItem('token')
+
+    if (token) {
+      router.redirect('/')
+    }
+
+    component = Login
+  })
+  router('/register', () => {
+    const token = localStorage.getItem('token')
+
+    if (token) {
+      router.redirect('/')
+    }
+
+    component = Register
+  })
   router('/', () => {
-    if (!user) {
+    const token = localStorage.getItem('token')
+
+    if (!token) {
       router.redirect('/login')
     }
 
-    page = Home
+    component = Home
   })
   router('/*', () => router.redirect('/'))
 
@@ -24,7 +41,7 @@
 
 
 <main>
-  <svelte:component this={page} params={params} />
+  <svelte:component this={component} props={props} />
 </main>
 
 <style global>
