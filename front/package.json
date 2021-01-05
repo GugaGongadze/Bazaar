@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@fullhuman/postcss-purgecss": "^2.0.5",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "page": "^1.11.5",
     "sirv-cli": "^0.4.4"
   }
